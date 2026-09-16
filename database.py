@@ -1,9 +1,12 @@
+import enum
 import os
-from sqlalchemy import Column, Integer, String, Boolean, create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
+
 from dotenv import load_dotenv
+from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
@@ -13,20 +16,31 @@ AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=F
 
 Base = declarative_base()
 
+
+class PointStatus(enum.Enum):
+    PENDING = "pending"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+
+
 class Point(Base):
     __tablename__ = "points"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
-    category = Column(String, nullable=False)  # 'clothes', 'books', 'tech', 'food'
+    category = Column(String, nullable=False)
     district = Column(String, nullable=False)
     address = Column(String, nullable=False)
     hours = Column(String, nullable=True)
     rules = Column(String, nullable=True)
-    is_active = Column(Boolean, default=True)
+    is_active = Column(Boolean, default=False)
+    status = Column(SAEnum(PointStatus), default=PointStatus.PENDING)
+    created_by = Column(Integer, nullable=True)
+
 
 async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
 
 async def get_db():
     async with AsyncSessionLocal() as session:
