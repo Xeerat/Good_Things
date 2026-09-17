@@ -211,7 +211,6 @@ async def admin_approve(call: CallbackQuery):
             parse_mode="Markdown",
         )
 
-        # Уведомляем пользователя об успехе
         try:
             await call.bot.send_message(
                 chat_id=point.created_by,

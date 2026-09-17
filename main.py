@@ -14,7 +14,6 @@ load_dotenv()
 
 
 async def main():
-    """Точка входа."""
 
     logging.basicConfig(level=logging.INFO)
 

@@ -13,7 +13,18 @@ def get_categories_kb() -> InlineKeyboardMarkup:
 
 def get_districts_kb(category: str) -> InlineKeyboardMarkup:
     # В MVP список районов захардкожен. В будущем можно тянуть из БД
-    districts = ["Центр", "Северный", "Южный", "Западный", "Восточный"]
+    districts = [
+        "Дзержинский",
+        "Железнодорожный",
+        "Заельцовский",
+        "Калининский",
+        "Кировский",
+        "Ленинский",
+        "Октябрьский",
+        "Первомайский",
+        "Советский",
+        "Центральный",
+    ]
     builder = InlineKeyboardBuilder()
     for d in districts:
         builder.row(InlineKeyboardButton(text=d, callback_data=f"dist_{d}_{category}"))
